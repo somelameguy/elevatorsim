@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,12 +35,19 @@ public class spherecast : MonoBehaviour {
 		}
 	}
 
-	bool isPlayerInTrouble(){
-		// Gets if enemy sees player. Used in the conditional that detects if player sees enemy.
-		GameObject enemySeen = hit.collider.gameObject;
-		//Get parent of object seen, since parent holds script.
-		Raycast_Enemy enemyscript = enemySeen.transform.parent.GetComponent<Raycast_Enemy> ();
-		return (enemyscript.getDetectedPlayer ());
+	public bool isPlayerInTrouble(){
+		try{
+			GameObject enemySeen=GameObject.FindGameObjectWithTag ("Player");
+			// Gets if enemy sees player. Used in the conditional that detects if player sees enemy.
+			enemySeen = hit.collider.gameObject;
+			//Get parent of object seen, since parent holds script.
+			Raycast_Enemy enemyscript = enemySeen.transform.parent.GetComponent<Raycast_Enemy> ();
+			return (enemyscript.getDetectedPlayer ());
+		}
+		catch (NullReferenceException e){
+			return (false);
+		}
+
 	}
 
 	void OnDrawGizmosSelected(){

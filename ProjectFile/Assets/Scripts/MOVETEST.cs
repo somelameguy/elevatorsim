@@ -2,7 +2,7 @@
 using System.Collections;
 
 // Determine the type of movement to simulate
-public enum MoveBehavior : byte { Strafe, WashingMachine, Rotate, Rest };
+public enum MoveBehavior : byte { Strafe, WashingMachine, Rotate, Rest, TrackPlayer };
 
 public class MOVETEST : MonoBehaviour {
 
@@ -33,11 +33,22 @@ public class MOVETEST : MonoBehaviour {
 			case MoveBehavior.Rest:
 				moveRest ();
 				break;
+			case MoveBehavior.TrackPlayer:
+				trackPlayer ();
+				break;
+
 			default: break; 
 		}
 
 		// Increment the timer
 		ticker ++;
+	}
+
+	void trackPlayer(){
+		GameObject player= GameObject.FindGameObjectWithTag ("Player");
+		//transform.LookAt (GameObject.FindGameObjectWithTag ("Player").transform, Vector3.up);
+		Quaternion towardsPlayer = Quaternion.LookRotation(player.transform.position - transform.position);
+		transform.rotation =  Quaternion.Lerp(transform.rotation, towardsPlayer, Time.deltaTime * speed);
 	}
 
 	

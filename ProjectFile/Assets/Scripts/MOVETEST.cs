@@ -7,18 +7,20 @@ public enum MoveBehavior : byte { Strafe, WashingMachine, Rotate, Rest, TrackPla
 public class MOVETEST : MonoBehaviour {
 
 	public MoveBehavior movement;
-	public float speed = 5.0f;
-
+	public float speed = 0.5f;
+	private Quaternion towardsPlayer;
 	private int ticker=0;
+	private GameObject player;
+	int interval = 3;
 	
 	// Use this for initialization
 	void Start () {
-	
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		towardsPlayer = Quaternion.LookRotation (player.transform.position - transform.position);
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-
 		// Move based on the movement type and speed selected
 		switch (movement) {
 			case MoveBehavior.Strafe:
@@ -34,6 +36,7 @@ public class MOVETEST : MonoBehaviour {
 				moveRest ();
 				break;
 			case MoveBehavior.TrackPlayer:
+				getPlayerPosition ();
 				trackPlayer ();
 				break;
 
@@ -44,11 +47,17 @@ public class MOVETEST : MonoBehaviour {
 		ticker ++;
 	}
 
+	void getPlayerPosition(){
+		if (Time.frameCount % 10 == 0) {
+			player = GameObject.FindGameObjectWithTag ("Player");
+			towardsPlayer = Quaternion.LookRotation (player.transform.position - transform.position);
+		}
+	}
+
 	void trackPlayer(){
-		GameObject player= GameObject.FindGameObjectWithTag ("Player");
-		//transform.LookAt (GameObject.FindGameObjectWithTag ("Player").transform, Vector3.up);
-		Quaternion towardsPlayer = Quaternion.LookRotation(player.transform.position - transform.position);
-		transform.rotation =  Quaternion.Lerp(transform.rotation, towardsPlayer, Time.deltaTime * speed);
+		if (Time.frameCount % interval == 0){
+			transform.rotation =  Quaternion.Lerp(transform.rotation, towardsPlayer, Time.deltaTime * speed);
+		}
 	}
 
 	

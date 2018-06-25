@@ -22,7 +22,7 @@ public class Raycast_Enemy : MonoBehaviour {
 		Vector3 screenCenter = new Vector3 (Screen.width / 2.0f, Screen.height / 2.0f, 0.0f);
 		Vector3 forward = transform.TransformDirection (Vector3.forward);
 
-		if (Physics.Raycast(player.transform.position,forward,out hit, Mathf.Infinity,layerMask)) {
+		if (Physics.Raycast(player.transform.position,forward,out hit, 10 ,layerMask)) {
 			Debug.DrawLine(player.transform.position, hit.point, Color.red, 0.1f);
 		}
 
@@ -30,13 +30,13 @@ public class Raycast_Enemy : MonoBehaviour {
 		distanceToObstacle = 0;
 		enemyForward = transform.forward;
 		// Cast a sphere forward relative to camera. 
-		if (Physics.SphereCast (p1, sphereCastWidth, enemyForward, out hit, 10, layerMask)) {
+		if (Physics.SphereCast (p1, sphereCastWidth, enemyForward, out hit, 5, layerMask)) {
 			distanceToObstacle = hit.distance;
 			detectedPlayer = true;
 			print ("Enemy Sees Player Eyes");
 		} 
 		else {
-			distanceToObstacle = 10;
+			distanceToObstacle = 5;
 			detectedPlayer = false;
 		}
 

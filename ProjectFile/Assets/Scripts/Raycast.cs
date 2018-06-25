@@ -23,7 +23,7 @@ public class Raycast : MonoBehaviour {
 		screenCenter = new Vector3 (Screen.width / 2.0f, Screen.height / 2.0f, 0.0f);
 		ray=Camera.main.ScreenPointToRay(screenCenter);
 
-		if (Physics.Raycast(ray,out hit, Mathf.Infinity, layerMask )) {
+		if (Physics.Raycast(ray,out hit, 10 , layerMask )) {
 			// Find the line from the camera to the mouse position.
 			Vector3 incomingVec = hit.point - Camera.main.transform.position;
 			

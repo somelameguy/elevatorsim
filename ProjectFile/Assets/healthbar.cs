@@ -21,7 +21,7 @@ public class healthbar : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		isDamaged = playerScript.isPlayerInTrouble ();
-		print (isDamaged);
+		//print (isDamaged);
 		if (currentHealth > 0 && isDamaged) {
 			currentHealth -= Time.deltaTime;
 			circle.fillAmount = currentHealth / health;

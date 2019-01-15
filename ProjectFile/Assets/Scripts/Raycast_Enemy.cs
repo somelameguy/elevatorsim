@@ -12,32 +12,39 @@ public class Raycast_Enemy : MonoBehaviour {
 	private float sphereCastWidth = 0.1f;
 	public bool detectedPlayer=false;
 
+	Renderer enemy_Renderer;
+
 	// Use this for initialization
 	void Start () {
-
+		enemy_Renderer = GetComponent<Renderer>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Vector3 screenCenter = new Vector3 (Screen.width / 2.0f, Screen.height / 2.0f, 0.0f);
-		Vector3 forward = transform.TransformDirection (Vector3.forward);
+		//Vector3 screenCenter = new Vector3 (Screen.width / 2.0f, Screen.height / 2.0f, 0.0f);
+		//Vector3 forward = transform.TransformDirection (Vector3.forward);
 
-		if (Physics.Raycast(player.transform.position,forward,out hit, 10 ,layerMask)) {
-			Debug.DrawLine(player.transform.position, hit.point, Color.red, 0.1f);
-		}
+		//if (Physics.Raycast(player.transform.position,forward,out hit, 10 ,layerMask)) {
+		//	Debug.DrawLine(player.transform.position, hit.point, Color.red, 0.1f);
+		//}
+
 
 		p1 = transform.position;
 		distanceToObstacle = 0;
 		enemyForward = transform.forward;
-		// Cast a sphere forward relative to camera. 
+		// Cast a sphere forward relative to camera. Do only if this enemy is in camera range.
+		if (enemy_Renderer.isVisible)
+		//	print ("Enemy spherecasting");
+		{
 		if (Physics.SphereCast (p1, sphereCastWidth, enemyForward, out hit, 5, layerMask)) {
 			distanceToObstacle = hit.distance;
 			detectedPlayer = true;
-			print ("Enemy Sees Player Eyes");
+			//print ("Enemy Sees Player Eyes");
 		} 
 		else {
 			distanceToObstacle = 5;
 			detectedPlayer = false;
+		}
 		}
 
 	}

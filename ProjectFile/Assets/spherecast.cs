@@ -24,9 +24,9 @@ public class spherecast : MonoBehaviour {
 		// Cast a sphere forward relative to camera. 
 		if (Physics.SphereCast (p1, sphereCastWidth, cameraForward, out hit, 10, layerMask)) {
 			distanceToObstacle = hit.distance;
-			print ("Player Sees Eyes");
+			//print ("Player Sees Eyes");
 			playerSeeEnemy = true;
-			print (isPlayerInTrouble ());
+			//print (isPlayerInTrouble ());
 
 		} 
 		else {

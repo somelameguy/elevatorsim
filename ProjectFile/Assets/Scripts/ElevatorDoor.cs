@@ -23,7 +23,7 @@ public class ElevatorDoor : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetMouseButtonDown (0) && (transform.position - player.transform.position).magnitude < 2){
+		if(Input.GetMouseButtonDown (0) && (transform.position - player.transform.position).magnitude < 5){
 			print ("TOGGLING ELEVATOR");
 			if ( !moving ){
 				moving = true;

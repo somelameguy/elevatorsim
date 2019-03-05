@@ -2,17 +2,20 @@
 using System.Collections;
 
 // Determine the type of movement to simulate
-public enum MoveBehavior : byte { WashingMachine, Rotate, Rest, TrackPlayer };
+public enum MoveBehavior : byte {Rotate, Rest, TrackPlayer };
 
 public class MOVETEST : MonoBehaviour {
 
 	public MoveBehavior movement;
 	public float speed = 180.0f;
+	public AudioSource thurSound;
+
 	private Quaternion towardsPlayer;
 	private int ticker=0;
 	private GameObject player;
-	//int interval = 0;
-	bool isCoroutineStarted = false;
+	private float distanceToPlayer=0;
+	private bool tooClose=false;
+
 
 	Quaternion randomLook;
 	float randomLookTime;
@@ -29,27 +32,46 @@ public class MOVETEST : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		Vector3 playerPosition = GameObject.FindGameObjectWithTag ("Player").transform.position;
+
 		// Move based on the movement type and speed selected
 		switch (movement) {
-			case MoveBehavior.WashingMachine:
-				moveWashingMachine ();
-				break;
+
 			case MoveBehavior.Rotate:
+			// Looks around idly. Should probably rename this.
 				moveRotate ();
 				break;
 			case MoveBehavior.Rest:
+			// Do nothing
 				moveRest ();
 				break;
 			case MoveBehavior.TrackPlayer:
+			// Look directly at player
 				getPlayerPosition ();
 				trackPlayer ();
 				break;
 
 			default: break; 
 		}
-
+		distanceToPlayer = Vector3.Distance (playerPosition,transform.position);
+		// Switch to TrackPlayer if you are very close to enemy. Variable tooClose prevents triggering this multiple times 
+		if (distanceToPlayer < 0.8f && !tooClose) {
+			print ("touching enemy");
+			movement = MoveBehavior.TrackPlayer;
+			tooClose = true;
+			if (!thurSound.isPlaying) {
+				//audioSource.PlayOneShot (thurSound, 0.7f);
+				thurSound.Play();
+			}
+			StartCoroutine (DelayEnemy ());
+		}
 		// Increment the timer
 		ticker ++;
+	}
+	private IEnumerator DelayEnemy(){
+		yield return new WaitForSeconds(5f);
+		tooClose = false;
+		movement = MoveBehavior.Rotate;
 	}
 
 	void getPlayerPosition(){
@@ -61,37 +83,14 @@ public class MOVETEST : MonoBehaviour {
 
 	// When alerted, should use rotate towards for immediate head turn. Bad for continuous follow since its choppy. Use Slerp for gradual tracking/ returning to uninterested state.
 	void trackPlayer(){
-		//if (Time.frameCount % interval == 0){
-		//transform.rotation =  Quaternion.Slerp(transform.rotation, towardsPlayer, Time.deltaTime * speed);
-		//transform.rotation = Quaternion.RotateTowards(transform.rotation, towardsPlayer, 5);
-		transform.rotation= towardsPlayer;
-		//}
+		transform.rotation =  Quaternion.Slerp(transform.rotation, towardsPlayer, 0.2f);
+		//transform.rotation= towardsPlayer;
+
 	}
 
 	
-	// Move back and forth
-	IEnumerator Idle(){
-		isCoroutineStarted = true;
-		float time = 3.0f;
-		Quaternion startingRotation = transform.rotation;
-		Quaternion random= Random.rotation;
-		transform.rotation = Quaternion.Slerp (startingRotation, random, time);
-		yield return new WaitForEndOfFrame();
 
-	}
-	
-
-	// Rotate in place back and forth
-	void moveWashingMachine(){
-		transform.Rotate(Vector3.up, speed);
-		if (ticker > 60) {
-			speed *= -1;
-			ticker=0;
-		}
-	}
-	
-
-	// Rotate in place in one direction
+	// Looks around randomly and returns to original look place.
 	void moveRotate(){
 		
 		//transform.Rotate(new Vector3(random,random2,0), speed);

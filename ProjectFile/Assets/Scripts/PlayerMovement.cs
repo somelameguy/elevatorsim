@@ -6,6 +6,10 @@ public class PlayerMovement : MonoBehaviour {
 	CharacterController cc;
 
 	public GameObject playerCam;
+	public AudioSource sorry1;
+	public AudioSource sorry2;
+	public AudioSource sorry3;
+	public AudioSource sorry4;
 
 	//----Movement Vars---
 	float forwardSpeed; 
@@ -13,7 +17,7 @@ public class PlayerMovement : MonoBehaviour {
 	float speedMultiplier= 3.0f; 
 	Vector3 speed;
 	float gravity=0;
-	float jumpSpeed=5.0f;
+
 
 	//-----Rotation vars----
 	float sideRotSpeed;
@@ -23,6 +27,7 @@ public class PlayerMovement : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		cc = GetComponent<CharacterController>();
+
 		// Screen.lockCursor = true; //Get rid of mouse on screen
 		Cursor.lockState = UnityEngine.CursorLockMode.Locked;
 		Cursor.visible = false;
@@ -49,8 +54,20 @@ public class PlayerMovement : MonoBehaviour {
 		speed = transform.rotation * speed;
 		cc.Move (speed* Time.fixedDeltaTime);
 
+		//SUMIMASEN
 		if (cc.isGrounded && Input.GetButtonDown ("Jump")) {
-			gravity=jumpSpeed;
+			int random = Random.Range (1, 4);
+			print (random);
+			if (random == 1 && !sorry1.isPlaying) {
+				sorry1.Play();
+			}
+			else if (random == 2 && !sorry2.isPlaying) {
+				sorry2.Play();
+			}
+			else if (random == 3 && !sorry4.isPlaying) {
+				sorry4.Play();
+			}
+
 		}
 
 		if (Input.GetMouseButtonDown (1)) {
